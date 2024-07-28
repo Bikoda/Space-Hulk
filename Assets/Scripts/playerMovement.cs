@@ -1,19 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
-
 public class playerMovement : MonoBehaviour
 {
-    
-    public Rigidbody playerRigidbody;
-    public float boostUp = 0.1f;
+    [SerializeField] Rigidbody playerRigidbody;
+    [SerializeField] float boostUp = 0.1f;
     private float timeSinceStarTime;
-    public float rotateSpeed = 70.0f;
+    [SerializeField] float rotateSpeed = 70.0f;
     private float rotateCalculated;
-    // Start is called before the first frame update
-
-
 
     void Start()
     {
@@ -24,7 +16,6 @@ public class playerMovement : MonoBehaviour
     void FixedUpdate()
     {
         rotateCalculated = rotateSpeed * Time.deltaTime;
-       
         ProcessThrust(boostUp);
         ProcessRotation();
     }
@@ -37,7 +28,6 @@ public class playerMovement : MonoBehaviour
             playerRigidbody.AddRelativeForce(Vector3.up * thrustitup * Time.deltaTime);
         }
     }
-
 
     private void ProcessRotation()
     {
@@ -57,7 +47,4 @@ public class playerMovement : MonoBehaviour
         transform.Rotate(Vector3.right * rotatethis);
         playerRigidbody.freezeRotation = false;
     }
-   
-
-
 }

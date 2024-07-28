@@ -9,6 +9,9 @@ TagManager:
   - Level3
   - Level4
   - GameOver
+  - LevelOneStart
+  - LevelOneFinish
+  - Friendly
   layers:
   - Default
   - TransparentFX
