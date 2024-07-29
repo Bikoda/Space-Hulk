@@ -79,7 +79,7 @@ public class HitPoints : MonoBehaviour
     {
         //FX Audio
         //Particle Effects
-        Debug.Log("You are dead.")
+        Debug.Log("You are dead.");
         Invoke("ReloadScene", 5f);
     }
 }
