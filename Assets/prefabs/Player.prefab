@@ -1925,10 +1925,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cca531e72542c14e91eb7075cad74b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitPoints: 3
   playerRb: {fileID: 297789460847726947}
-  gameOver: {fileID: 0}
-  level1Completed: {fileID: 0}
+  playerMovement: {fileID: 0}
 --- !u!82 &2664595453041563789
 AudioSource:
   m_ObjectHideFlags: 0

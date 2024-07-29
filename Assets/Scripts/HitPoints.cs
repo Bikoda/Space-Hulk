@@ -4,28 +4,26 @@ using UnityEngine.SceneManagement;
 
 public class HitPoints : MonoBehaviour
 {
-    [SerializeField] int hitPoints = 10;
+    
     [SerializeField] Rigidbody playerRb;
+    public PlayerMovement playerMovement;
     private GameObject gameOver;
     private GameObject level1Completed;
-    private bool isGameOver = false; 
-    private bool levelOneComplete = false;
-    private bool levelTwoComplete = false;
-    private bool levelThreeComplete = false;
+    private int hitPoints = 5;
+
 
     void Start()
     {
         playerRb = GetComponent<Rigidbody>();
+        Component playerAudio = gameObject.GetComponent<AudioSource>();
     }
 
     void Update()
     {
-        if (hitPoints <= 0)
-        {
-            GameOver();
-            ReloadScene();
-        }
+       
     }
+
+
 
     private void OnCollisionEnter(Collision other)
     {
@@ -35,16 +33,22 @@ public class HitPoints : MonoBehaviour
                 Debug.Log("I am friendly");
                 break;
             case "Finish":
-                LoadNextScene();
+                SuccessSequence();
                 break;
             default:
                 Damange();
                 break;
         }
     }
-
+    void SuccessSequence()
+    {   //FX Audio
+        //Particle Effects
+        Debug.Log("teleporting keystone activated, don't move.");
+        Invoke("LoadNextScene", 5f);
+    }
     void LoadNextScene()
     {
+        GetComponent<PlayerMovement>().enabled = false;
         int activeScene = SceneManager.GetActiveScene().buildIndex;
         int followScene = activeScene + 1;
         if (followScene == SceneManager.sceneCountInBuildSettings) 
@@ -58,39 +62,24 @@ public class HitPoints : MonoBehaviour
     {
         int currentScene = SceneManager.GetActiveScene().buildIndex;
         SceneManager.LoadScene(currentScene);
-       
-    }
-
-    public void GameOver()
-    {
-        if (levelOneComplete == false)
-        {
-            Debug.Log("You are dead, dude");
-            isGameOver = true;
-        }
-    }
-
-    void Level2Complete()
-    {
-        if (isGameOver == false)
-        {
-            Debug.Log("YOU'VE COMPLETED THE LEVEL 2!");
-            levelTwoComplete = true;
-        }
-    }
-
-    void Level1Complete()
-    {
-        if (isGameOver == false)
-        {
-            Debug.Log("YOU'VE COMPLETED THE LEVEL!");
-            levelOneComplete = true;
-        }
     }
 
     void Damange()
     {
         hitPoints--;
         Debug.Log("You've lost a Hit Point, you've got " + hitPoints + " left");
+
+        if (hitPoints <= 0)
+        {
+
+            StartCrashSequence();
+        }
+    }
+    void StartCrashSequence()
+    {
+        //FX Audio
+        //Particle Effects
+        Debug.Log("You are dead.")
+        Invoke("ReloadScene", 5f);
     }
 }

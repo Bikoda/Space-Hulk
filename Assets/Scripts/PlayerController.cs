@@ -1,9 +1,10 @@
 using UnityEngine;
-public class PlayerMovement : MonoBehaviour
+
+public class PlayerController : MonoBehaviour
 {
-    
-    [SerializeField] float boostUp = 0.1f;
-    [SerializeField] float rotateSpeed = 70.0f;
+
+    private float boostUp = 1000.0f;
+    private float rotateSpeed = 2.0f;
     private float rotateCalculated;
     private float timeSinceStarTime;
     private Rigidbody playerRigidbody;
@@ -31,11 +32,12 @@ public class PlayerMovement : MonoBehaviour
         {
             Debug.Log("space has been pressed");
             playerRigidbody.AddRelativeForce(Vector3.up * thrustitup * Time.deltaTime);
-            if (!engine.isPlaying) 
+            if (!engine.isPlaying)
             {
                 engine.Play();
-            } 
-        }else
+            }
+        }
+        else
         {
             engine.Stop();
         }
