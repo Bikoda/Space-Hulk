@@ -1,47 +1,85 @@
-using System.Collections;
-using System.Collections.Generic;
+using UnityEditor.Build.Content;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class HitPoints : MonoBehaviour
 {
-    public int hitPoints = 10;
-    public bool isGameOver = false;
-    public GameObject gameOver;
-    public GameObject startZone;
-    public GameObject endZone;
-    // Start is called before the first frame update
+    
+    [SerializeField] Rigidbody playerRb;
+    public PlayerMovement playerMovement;
+    private GameObject gameOver;
+    private GameObject level1Completed;
+    private int hitPoints = 5;
+
+
     void Start()
     {
-         gameOver = GameObject.FindWithTag("GameOver");
+        playerRb = GetComponent<Rigidbody>();
+        Component playerAudio = gameObject.GetComponent<AudioSource>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (hitPoints == 0)
-        {
-           
-            GameOver();
-            
-        }
        
     }
 
-    private void OnCollisionEnter(Collision collision)
+
+
+    private void OnCollisionEnter(Collision other)
     {
-        if (collision.gameObject != startZone && collision.gameObject != endZone)
+        switch (other.gameObject.tag)
         {
-            hitPoints--;
-            Debug.Log("You've lost a Hit Point, you've got " + hitPoints + " left");
+            case "Friendly":
+                Debug.Log("I am friendly");
+                break;
+            case "Finish":
+                SuccessSequence();
+                break;
+            default:
+                Damange();
+                break;
         }
-       
+    }
+    void SuccessSequence()
+    {   //FX Audio
+        //Particle Effects
+        Debug.Log("teleporting keystone activated, don't move.");
+        Invoke("LoadNextScene", 5f);
+    }
+    void LoadNextScene()
+    {
+        GetComponent<PlayerMovement>().enabled = false;
+        int activeScene = SceneManager.GetActiveScene().buildIndex;
+        int followScene = activeScene + 1;
+        if (followScene == SceneManager.sceneCountInBuildSettings) 
+        {
+            followScene = 0;
+        }
+        SceneManager.LoadScene(followScene);
     }
 
-    public void GameOver()
+    void ReloadScene()
     {
+        int currentScene = SceneManager.GetActiveScene().buildIndex;
+        SceneManager.LoadScene(currentScene);
+    }
+
+    void Damange()
+    {
+        hitPoints--;
+        Debug.Log("You've lost a Hit Point, you've got " + hitPoints + " left");
+
+        if (hitPoints <= 0)
+        {
+
+            StartCrashSequence();
+        }
+    }
+    void StartCrashSequence()
+    {
+        //FX Audio
+        //Particle Effects
         Debug.Log("You are dead.");
-        //gameOver = GameObject.FindWithTag("GameOver");
-        isGameOver = true;
-        //gameOver.SetActive(true);
+        Invoke("ReloadScene", 5f);
     }
 }
