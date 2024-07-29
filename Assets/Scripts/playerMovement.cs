@@ -1,16 +1,21 @@
 using UnityEngine;
 public class playerMovement : MonoBehaviour
 {
-    [SerializeField] Rigidbody playerRigidbody;
+    
     [SerializeField] float boostUp = 0.1f;
-    private float timeSinceStarTime;
     [SerializeField] float rotateSpeed = 70.0f;
     private float rotateCalculated;
+    private float timeSinceStarTime;
+    private Rigidbody playerRigidbody;
+    private GameObject player;
+    private AudioSource engine;
 
     void Start()
     {
-        playerRigidbody = GetComponent<Rigidbody>();
+        player = GameObject.FindWithTag("Player");
+        playerRigidbody = player.GetComponent<Rigidbody>();
         timeSinceStarTime = Time.time;
+        engine = player.GetComponent<AudioSource>();
     }
 
     void FixedUpdate()
@@ -26,9 +31,15 @@ public class playerMovement : MonoBehaviour
         {
             Debug.Log("space has been pressed");
             playerRigidbody.AddRelativeForce(Vector3.up * thrustitup * Time.deltaTime);
+            if (!engine.isPlaying) 
+            {
+                engine.Play();
+            } 
+        }else
+        {
+            engine.Stop();
         }
     }
-
     private void ProcessRotation()
     {
         if (Input.GetKey(KeyCode.RightArrow))

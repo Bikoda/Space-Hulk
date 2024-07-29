@@ -12,6 +12,15 @@ TagManager:
   - LevelOneStart
   - LevelOneFinish
   - Friendly
+  - GameOverText
+  - Start
+  - level1Completed
+  - Level_1_Finish
+  - Level_1_Start
+  - Level_2_Finish
+  - Level_2_Start
+  - LeveL_3_Finish
+  - Level_4_Finish
   layers:
   - Default
   - TransparentFX
