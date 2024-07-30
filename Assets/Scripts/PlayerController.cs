@@ -5,18 +5,17 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float boostUp = 1000.0f;
     [SerializeField] float rotateSpeed = 1.0f;
     [SerializeField] ParticleSystem thrustersParticle;
+    private Rigidbody playerRigidbody;
+    private AudioSource audioSource;
+    private GameObject player;
+    [SerializeField] AudioClip engine;
+    [SerializeField] GameObject ligght;
     private float rotateCalculated;
     private float timeSinceStarTime;
-    private Rigidbody playerRigidbody;
-    private GameObject player;
-    public AudioClip engine;
-    private AudioSource audioSource;
     private int hitPoints;
-    public GameObject ligght;
 
     void Start()
-    {
-        
+    {      
         //hitPoints = GetComponent<HitPoints>().HitPointsTotal();
         player = GameObject.FindWithTag("Player");
         playerRigidbody = player.GetComponent<Rigidbody>();
@@ -26,7 +25,6 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-
         rotateCalculated = rotateSpeed * Time.deltaTime;
 
         ProcessThrust(boostUp);
@@ -38,24 +36,33 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.Space))
         {
-            
-            Debug.Log("space has been pressed");
-            playerRigidbody.AddRelativeForce(Vector3.up * thrustitup * Time.deltaTime);
-            if (!audioSource.isPlaying)
-            {
-                ligght.SetActive(true);
-                thrustersParticle.Play();
-                audioSource.PlayOneShot(engine);
-            }
+            StartThrusting(thrustitup);
         }
         else
         {
-            ligght.SetActive(false);
-            thrustersParticle.Stop();
-            audioSource.Stop();
-
+            StopThrusting();
         }
     }
+
+    private void StopThrusting()
+    {
+        ligght.SetActive(false);
+        thrustersParticle.Stop();
+        audioSource.Stop();
+    }
+
+    private void StartThrusting(float thrustitup)
+    {
+        Debug.Log("space has been pressed");
+        playerRigidbody.AddRelativeForce(Vector3.up * thrustitup * Time.deltaTime);
+        if (!audioSource.isPlaying)
+        {
+            ligght.SetActive(true);
+            thrustersParticle.Play();
+            audioSource.PlayOneShot(engine);
+        }
+    }
+
     private void ProcessRotation()
     {
         if (Input.GetKey(KeyCode.RightArrow))

@@ -1,37 +1,54 @@
-using Unity.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class HitPoints : MonoBehaviour
 {
-    
-    
+
     [SerializeField] AudioClip explossion;
     [SerializeField] AudioClip success;
     [SerializeField] ParticleSystem deathParticle;
     [SerializeField] ParticleSystem successParticle;
-    private int hitPoints = 1;
+    [SerializeField] int hitPoints = 1;
+    private bool collideOff = false;
     private Rigidbody playerRb;
     private GameObject gameOver;
     private GameObject level1Completed;
     private AudioSource audioSource;
     private PlayerController playerController;
-    public bool isInTransition;
-    public bool waitForIt;
+    [SerializeField] bool isInTransition;
+    [SerializeField] bool waitForIt;
 
-    void Start()   
+    void Start()
     {
         playerController = GetComponent<PlayerController>();
         gameOver = GameObject.FindWithTag("GameOver");
         audioSource = GetComponent<AudioSource>();
         playerRb = GetComponent<Rigidbody>();
         Component playerAudio = gameObject.GetComponent<AudioSource>();
-        
+    }
+
+    void Update()
+    {
+        DebugKeys();
+    }
+
+    private void DebugKeys()
+    {
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            Debug.Log("Load next scene");
+            LoadNextScene();
+        }
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            collideOff = !collideOff;
+            Debug.Log("Collisions are turned off " + collideOff);
+        }
     }
 
     private void OnCollisionEnter(Collision other)
     {
-        if (waitForIt)
+        if (waitForIt || collideOff)
         {
             return;
         }
@@ -58,9 +75,8 @@ public class HitPoints : MonoBehaviour
 
         if (hitPoints <= 0)
         {
-            
+            playerController.enabled = false;
             StartCrashSequence();
-
         }
     }
 
@@ -69,7 +85,7 @@ public class HitPoints : MonoBehaviour
         waitForIt = true;
         audioSource.Stop();
         audioSource.PlayOneShot(explossion);
-        deathParticle.Play();       /*particlesSystem.Play(deathParticle); - this is generating a being immortal bug that just breaks the game*/
+        deathParticle.Play();
         Debug.Log("You are dead.");
         //gameOver.SetActive(true);
         Invoke("ReloadScene", 5f);
@@ -77,6 +93,7 @@ public class HitPoints : MonoBehaviour
     void SuccessSequence()
 
     {
+        playerController.enabled = false;
         waitForIt = true;
         audioSource.Stop();
         audioSource.PlayOneShot(success);
@@ -87,15 +104,13 @@ public class HitPoints : MonoBehaviour
 
     void ReloadScene()
     {
-       
         int currentScene = SceneManager.GetActiveScene().buildIndex;
         SceneManager.LoadScene(currentScene);
     }
 
     void LoadNextScene()
     {
-        //gameOver.SetActive(false);
-        playerController.enabled = false;
+        //gameOver.SetActive(false);        
         int activeScene = SceneManager.GetActiveScene().buildIndex;
         int followScene = activeScene + 1;
         if (followScene == SceneManager.sceneCountInBuildSettings)
@@ -104,6 +119,4 @@ public class HitPoints : MonoBehaviour
         }
         SceneManager.LoadScene(followScene);
     }
-
-
 }
