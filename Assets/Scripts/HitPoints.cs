@@ -11,6 +11,7 @@ public class HitPoints : MonoBehaviour
     [SerializeField] ParticleSystem deathParticle;
     [SerializeField] ParticleSystem successParticle;
     private int hitPoints = 1;
+    private bool collideOff = false;
     private Rigidbody playerRb;
     private GameObject gameOver;
     private GameObject level1Completed;
@@ -29,9 +30,30 @@ public class HitPoints : MonoBehaviour
         
     }
 
+    void Update()
+    {
+        DebugKeys();
+
+    }
+
+    private void DebugKeys()
+    {
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            Debug.Log("Load next scene");
+            LoadNextScene();
+        }
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            
+            collideOff = !collideOff;
+            Debug.Log("Collisions are turned off " + collideOff);
+        }
+    }
+
     private void OnCollisionEnter(Collision other)
     {
-        if (waitForIt)
+        if (waitForIt || collideOff)
         {
             return;
         }
@@ -52,16 +74,19 @@ public class HitPoints : MonoBehaviour
 
     void Damange()
     {
-        audioSource.PlayOneShot(explossion);
-        hitPoints--;
-        Debug.Log("You've lost a Hit Point, you've got " + hitPoints + " left");
+        
+         audioSource.PlayOneShot(explossion);
+         hitPoints--;
+         Debug.Log("You've lost a Hit Point, you've got " + hitPoints + " left");
 
-        if (hitPoints <= 0)
-        {
-            
-            StartCrashSequence();
+         if (hitPoints <= 0)
+         {
+             playerController.enabled = false;
+             StartCrashSequence();
 
-        }
+         }
+        
+     
     }
 
     void StartCrashSequence()
@@ -77,6 +102,7 @@ public class HitPoints : MonoBehaviour
     void SuccessSequence()
 
     {
+        playerController.enabled = false;
         waitForIt = true;
         audioSource.Stop();
         audioSource.PlayOneShot(success);
@@ -95,7 +121,7 @@ public class HitPoints : MonoBehaviour
     void LoadNextScene()
     {
         //gameOver.SetActive(false);
-        playerController.enabled = false;
+        
         int activeScene = SceneManager.GetActiveScene().buildIndex;
         int followScene = activeScene + 1;
         if (followScene == SceneManager.sceneCountInBuildSettings)

@@ -5,14 +5,15 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float boostUp = 1000.0f;
     [SerializeField] float rotateSpeed = 1.0f;
     [SerializeField] ParticleSystem thrustersParticle;
-    private float rotateCalculated;
-    private float timeSinceStarTime;
     private Rigidbody playerRigidbody;
+    private AudioSource audioSource;
     private GameObject player;
     public AudioClip engine;
-    private AudioSource audioSource;
-    private int hitPoints;
     public GameObject ligght;
+    private float rotateCalculated;
+    private float timeSinceStarTime;
+    private int hitPoints;
+
 
     void Start()
     {
@@ -38,24 +39,34 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.Space))
         {
-            
-            Debug.Log("space has been pressed");
-            playerRigidbody.AddRelativeForce(Vector3.up * thrustitup * Time.deltaTime);
-            if (!audioSource.isPlaying)
-            {
-                ligght.SetActive(true);
-                thrustersParticle.Play();
-                audioSource.PlayOneShot(engine);
-            }
+            StartThrusting(thrustitup);
         }
         else
         {
-            ligght.SetActive(false);
-            thrustersParticle.Stop();
-            audioSource.Stop();
+            StopThrusting();
 
         }
     }
+
+    private void StopThrusting()
+    {
+        ligght.SetActive(false);
+        thrustersParticle.Stop();
+        audioSource.Stop();
+    }
+
+    private void StartThrusting(float thrustitup)
+    {
+        Debug.Log("space has been pressed");
+        playerRigidbody.AddRelativeForce(Vector3.up * thrustitup * Time.deltaTime);
+        if (!audioSource.isPlaying)
+        {
+            ligght.SetActive(true);
+            thrustersParticle.Play();
+            audioSource.PlayOneShot(engine);
+        }
+    }
+
     private void ProcessRotation()
     {
         if (Input.GetKey(KeyCode.RightArrow))
