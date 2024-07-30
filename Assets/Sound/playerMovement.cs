@@ -1,4 +1,6 @@
+using Unity.Collections;
 using UnityEngine;
+
 public class PlayerMovement : MonoBehaviour
 {
     
@@ -8,21 +10,28 @@ public class PlayerMovement : MonoBehaviour
     private float timeSinceStarTime;
     private Rigidbody playerRigidbody;
     private GameObject player;
-    private AudioSource engine;
+    public AudioClip engine;
+    private AudioSource audioSource;
+    private int hitPoints;
+
 
     void Start()
     {
+        //hitPoints = GetComponent<HitPoints>().HitPointsTotal();
         player = GameObject.FindWithTag("Player");
         playerRigidbody = player.GetComponent<Rigidbody>();
         timeSinceStarTime = Time.time;
-        engine = player.GetComponent<AudioSource>();
+        audioSource = player.GetComponent<AudioSource>();
     }
 
     void FixedUpdate()
     {
+       
         rotateCalculated = rotateSpeed * Time.deltaTime;
+
         ProcessThrust(boostUp);
         ProcessRotation();
+         
     }
 
     private void ProcessThrust(float thrustitup)
@@ -31,13 +40,14 @@ public class PlayerMovement : MonoBehaviour
         {
             Debug.Log("space has been pressed");
             playerRigidbody.AddRelativeForce(Vector3.up * thrustitup * Time.deltaTime);
-            if (!engine.isPlaying) 
+            if (!audioSource.isPlaying) 
             {
-                engine.Play();
+                audioSource.PlayOneShot(engine);
             } 
         }else
         {
-            engine.Stop();
+            audioSource.Stop();
+            
         }
     }
     private void ProcessRotation()

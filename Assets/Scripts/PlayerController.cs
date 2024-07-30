@@ -2,44 +2,58 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-
-    private float boostUp = 1000.0f;
-    private float rotateSpeed = 2.0f;
+    [SerializeField] float boostUp = 1000.0f;
+    [SerializeField] float rotateSpeed = 1.0f;
+    [SerializeField] ParticleSystem thrustersParticle;
     private float rotateCalculated;
     private float timeSinceStarTime;
     private Rigidbody playerRigidbody;
     private GameObject player;
-    private AudioSource engine;
+    public AudioClip engine;
+    private AudioSource audioSource;
+    private int hitPoints;
+    public GameObject ligght;
 
     void Start()
     {
+        
+        //hitPoints = GetComponent<HitPoints>().HitPointsTotal();
         player = GameObject.FindWithTag("Player");
         playerRigidbody = player.GetComponent<Rigidbody>();
         timeSinceStarTime = Time.time;
-        engine = player.GetComponent<AudioSource>();
+        audioSource = player.GetComponent<AudioSource>();
     }
 
     void FixedUpdate()
     {
+
         rotateCalculated = rotateSpeed * Time.deltaTime;
+
         ProcessThrust(boostUp);
         ProcessRotation();
+
     }
 
     private void ProcessThrust(float thrustitup)
     {
         if (Input.GetKey(KeyCode.Space))
         {
+            
             Debug.Log("space has been pressed");
             playerRigidbody.AddRelativeForce(Vector3.up * thrustitup * Time.deltaTime);
-            if (!engine.isPlaying)
+            if (!audioSource.isPlaying)
             {
-                engine.Play();
+                ligght.SetActive(true);
+                thrustersParticle.Play();
+                audioSource.PlayOneShot(engine);
             }
         }
         else
         {
-            engine.Stop();
+            ligght.SetActive(false);
+            thrustersParticle.Stop();
+            audioSource.Stop();
+
         }
     }
     private void ProcessRotation()
@@ -47,6 +61,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKey(KeyCode.RightArrow))
         {
             RotateRocket(-rotateSpeed);
+            
         }
         else if (Input.GetKey(KeyCode.LeftArrow))
         {
