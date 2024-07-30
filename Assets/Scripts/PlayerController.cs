@@ -8,16 +8,14 @@ public class PlayerController : MonoBehaviour
     private Rigidbody playerRigidbody;
     private AudioSource audioSource;
     private GameObject player;
-    public AudioClip engine;
-    public GameObject ligght;
+    [SerializeField] AudioClip engine;
+    [SerializeField] GameObject ligght;
     private float rotateCalculated;
     private float timeSinceStarTime;
     private int hitPoints;
 
-
     void Start()
-    {
-        
+    {      
         //hitPoints = GetComponent<HitPoints>().HitPointsTotal();
         player = GameObject.FindWithTag("Player");
         playerRigidbody = player.GetComponent<Rigidbody>();
@@ -27,7 +25,6 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-
         rotateCalculated = rotateSpeed * Time.deltaTime;
 
         ProcessThrust(boostUp);
@@ -44,7 +41,6 @@ public class PlayerController : MonoBehaviour
         else
         {
             StopThrusting();
-
         }
     }
 
