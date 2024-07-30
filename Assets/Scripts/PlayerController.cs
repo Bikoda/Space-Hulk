@@ -39,6 +39,7 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.Space))
         {
+            Debug.Log("Space PRESSED");
             StartThrusting(thrustitup);
         }
         else

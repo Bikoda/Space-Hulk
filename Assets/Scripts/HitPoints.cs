@@ -23,7 +23,7 @@ public class HitPoints : MonoBehaviour
     void Start()   
     {
         playerController = GetComponent<PlayerController>();
-        gameOver = GameObject.FindWithTag("GameOver");
+        //gameOver = GameObject.FindWithTag("GameOver");
         audioSource = GetComponent<AudioSource>();
         playerRb = GetComponent<Rigidbody>();
         Component playerAudio = gameObject.GetComponent<AudioSource>();
