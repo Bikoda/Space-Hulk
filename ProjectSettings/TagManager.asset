@@ -21,6 +21,9 @@ TagManager:
   - Level_2_Start
   - LeveL_3_Finish
   - Level_4_Finish
+  - ExplossionParticles
+  - SuccessParticles
+  - Light
   layers:
   - Default
   - TransparentFX
