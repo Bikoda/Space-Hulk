@@ -1,21 +1,29 @@
-using System.Collections;
-using System.Collections.Generic;
+using Unity.Collections;
 using UnityEngine;
+
 
 public class FollowPlayer : MonoBehaviour
 {
-    private Vector3 offSet = new Vector3(10,0,0);
-    public GameObject player;
-    public Rigidbody playerRigidbody;
-    // Start is called before the first frame update
+    [SerializeField] GameObject player;
+   
+    private Vector3 offSet = new Vector3(10, 0, 0);
+    
+
+
     void Start()
     {
-        playerRigidbody = player.GetComponent<Rigidbody>();
+       
+        if (player == null)
+        {
+            player = GameObject.FindWithTag("Player");
+        }
     }
 
-    // Update is called once per frame
     void LateUpdate()
     {
-        transform.position = player.transform.position + offSet;
+        if (player != null)
+        {
+            transform.position = player.transform.position + offSet;
+        }
     }
 }
